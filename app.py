@@ -2,6 +2,18 @@ import streamlit as st
 import random
 import os
 
+# Set the background image
+st.markdown("""
+<style>
+[data-testid="stAppViewContainer"] > .main {
+    background-image: url("https://raw.githubusercontent.com/yourusername/yourrepo/main/path/to/your/background_image.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Set the title
 st.title("Healing Bandaids 🩹✨")
 st.subheader("Daily Reflection")
