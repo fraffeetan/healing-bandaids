@@ -28,6 +28,11 @@ st.markdown(f"""
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        color: #4e6d60;
+    }}
+
+    .css-1v3fvcr {{  /* reflection streak background */
+        background-color: #cbada7 !important;
     }}
 
     .fade-in {{
@@ -71,13 +76,10 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 
-# --- AUDIO --- #
-st.audio("https://cdn.pixabay.com/audio/2022/03/15/audio_09e8a1e243.mp3", format="audio/mp3", start_time=0)
-
 # --- SIDEBAR LOGO --- #
 with st.sidebar:
     if os.path.exists(LOGO_IMAGE):
-        st.image(LOGO_IMAGE, width=300)
+        st.image(LOGO_IMAGE, width=120)
 
 # --- TITLE + NAVIGATION --- #
 st.title("Healing Bandaids 🩹✨")
@@ -105,7 +107,7 @@ if "calendar_marked" not in st.session_state:
 # --- INIT REFLECTION FILE --- #
 if not os.path.exists(REFLECTION_FILE):
     with open(REFLECTION_FILE, "w") as f:
-        json.dump({}, f)
+        json.dump([], f)
 
 # --- HEALING JOURNAL --- #
 if mode == "Healing Journal":
@@ -125,7 +127,7 @@ if mode == "Healing Journal":
             st.session_state.show_next = True
             with open(REFLECTION_FILE, "r") as f:
                 reflections = json.load(f)
-            reflections[date.today().isoformat()] = user_input
+            reflections.append({"datetime": datetime.now().isoformat(), "reflection": user_input})
             with open(REFLECTION_FILE, "w") as f:
                 json.dump(reflections, f)
             st.success("Thank you for your vulnerability. You are doing beautiful work 🌟🪖")
@@ -135,7 +137,6 @@ if mode == "Healing Journal":
             st.session_state.chosen_bandaid = random.choice(bandaid_images)
             st.session_state.user_input = ""
             st.session_state.show_next = False
-            st.success("Here's your next Healing Bandaid 🩹✨")
 
 # --- I AM HERE CALENDAR --- #
 elif mode == "I Am Here Calendar":
@@ -153,25 +154,23 @@ elif mode == "I Am Here Calendar":
 
 # --- GOAL STREAK TRACKER --- #
 elif mode == "Goal Streak Tracker":
+    st.markdown('<div class="css-1v3fvcr">', unsafe_allow_html=True)
     st.header("Reflection Streak Tracker 📊")
     with open(REFLECTION_FILE, "r") as f:
         data = json.load(f)
     if data:
-        df = pd.DataFrame(data.items(), columns=["Date", "Reflection"]).sort_values("Date")
-        dates = [datetime.strptime(d, "%Y-%m-%d") for d in data.keys()]
-        dates.sort()
-        streak = 0
-        today = datetime.today().date()
-        if today.isoformat() in data:
-            streak += 1
-        if (today - timedelta(days=1)).isoformat() in data:
-            streak += 1
-        streak_dates = [d.strftime("%Y-%m-%d") for d in dates]
+        df = pd.DataFrame(data)
+        df["date"] = pd.to_datetime(df["datetime"]).dt.date
+        streak_dates = df["date"].sort_values().unique()
         streak_counts = list(range(1, len(streak_dates) + 1))
         st.line_chart(pd.Series(streak_counts, index=streak_dates))
+        streak_today = date.today() in streak_dates
+        streak_yesterday = (date.today() - timedelta(days=1)) in streak_dates
+        streak = int(streak_today) + int(streak_yesterday)
         st.info(f"You're on a {streak}-day reflection streak! 🔥")
     else:
         st.warning("No reflections yet. Start journaling today!")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # --- REFLECTION HISTORY --- #
 elif mode == "Reflection History":
@@ -179,8 +178,11 @@ elif mode == "Reflection History":
     with open(REFLECTION_FILE, "r") as f:
         data = json.load(f)
     if data:
-        df = pd.DataFrame(data.items(), columns=["Date", "Reflection"]).sort_values("Date", ascending=False)
-        st.dataframe(df, use_container_width=True)
+        df = pd.DataFrame(data)
+        df["datetime"] = pd.to_datetime(df["datetime"])
+        df["date"] = df["datetime"].dt.strftime("%Y-%m-%d %H:%M")
+        df = df[["date", "reflection"]].sort_values("date", ascending=False)
+        st.dataframe(df.rename(columns={"date": "Date", "reflection": "Reflection"}), use_container_width=True)
     else:
         st.info("No reflections yet. Start your first one today 💭")
 
