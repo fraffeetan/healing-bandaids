@@ -63,7 +63,7 @@ if mode == "View All Bandaids":
     st.header("All Healing Bandaids 🖼️")
     for img in bandaid_images:
         img_path = os.path.join(BANDAID_FOLDER, img)
-        st.image(img_path, caption=img, use_column_width=True)
+        st.image(img_path, caption=img, use_container_width=True)
     st.info("When you're ready to reflect, go back to 'Healing Journal' on the sidebar ✍️")
 
 # --- VIEW MODE: JOURNALING --- #
