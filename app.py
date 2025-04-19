@@ -4,7 +4,7 @@ import os
 
 # --- CONFIG --- #
 BANDAID_FOLDER = "bandaids"
-BACKGROUND_IMAGE_URL = "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/paper.png"  # CHANGE THIS!
+BACKGROUND_IMAGE_URL = "https://raw.githubusercontent.com/fraffeetan/healing-bandaids/main/paper.png"  # CHANGE THIS!
 
 # --- STYLING --- #
 st.markdown(f"""
