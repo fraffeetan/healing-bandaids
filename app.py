@@ -2,17 +2,14 @@ import streamlit as st
 import random
 import os
 
-# Set the background image
+# Set the background color
 st.markdown("""
-<style>
-[data-testid="stAppViewContainer"] > .main {
-    background-image: url("https://github.com/fraffeetan/healing-bandaids/blob/16899cd1b531424138fb2e2e2ac269aebc46201d/paper.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-</style>
-""", unsafe_allow_html=True)
+    <style>
+    .stApp {
+        background-color: #d8b2d1;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # Set the title
 st.title("Healing Bandaids 🩹✨")
