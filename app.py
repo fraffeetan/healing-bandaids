@@ -31,6 +31,10 @@ st.markdown(f"""
         color: #245444;
     }}
 
+    section[data-testid="stSidebar"] label, section[data-testid="stSidebar"] .css-1aumxhk {{
+        color: #245444 !important;
+    }}
+
     .css-1v3fvcr {{  /* reflection streak background */
         background-color: #cbada7 !important;
     }}
@@ -131,6 +135,28 @@ if mode == "Healing Journal":
             with open(REFLECTION_FILE, "w") as f:
                 json.dump(reflections, f)
             st.success("Thank you for your vulnerability. You are doing beautiful work 🌟🪖")
+            st.markdown("""
+            <style>
+            @keyframes flowerRain {
+                0% { transform: translateY(-50px); opacity: 1; }
+                100% { transform: translateY(100vh); opacity: 0; }
+            }
+            .flower {{
+                position: fixed;
+                top: 0;
+                left: 50%;
+                font-size: 40px;
+                animation: flowerRain 5s linear infinite;
+                z-index: 9999;
+            }}
+            </style>
+            <div class='flower'>🌸</div>
+            <div class='flower' style='left: 30%;'>🌼</div>
+            <div class='flower' style='left: 70%;'>🌺</div>
+            <div class='flower' style='left: 40%;'>💐</div>
+            <div class='flower' style='left: 60%;'>🌷</div>
+            <div class='flower' style='left: 20%;'>🌻</div>
+            """, unsafe_allow_html=True)
 
     if st.session_state.show_next:
         if st.button("See next Healing Bandaid?"):
