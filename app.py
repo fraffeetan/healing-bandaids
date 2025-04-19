@@ -1,18 +1,35 @@
 import streamlit as st
 import random
 import os
-from datetime import date
+import json
+from datetime import date, datetime, timedelta
+import pandas as pd
 
-# --- CONFIG --- #
+# CONFIG
 BANDAID_FOLDER = "bandaids"
-BG_COLOR = "#d8b2d1"
+REFLECTION_FILE = "reflection_history.json"
+LOGO_IMAGE = "bandaids-logo.png"
 
 # --- STYLING --- #
 st.markdown(f"""
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap');
+
     html, body, .stApp {{
-        background-color: {BG_COLOR};
+        background-color: #4e6d60;
+        font-family: 'Abril Fatface', cursive;
+        color: white;
+        text-align: center;
     }}
+
+    section[data-testid="stSidebar"] > div:first-child {{
+        background-color: #fbe3cc;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }}
+
     .fade-in {{
         animation: fadeIn ease 2s;
     }}
@@ -20,6 +37,7 @@ st.markdown(f"""
         0% {{opacity:0;}}
         100% {{opacity:1;}}
     }}
+
     img {{
         display: block;
         margin-left: auto;
@@ -27,12 +45,14 @@ st.markdown(f"""
         max-width: 80%;
         border-radius: 10px;
     }}
+
     .stTextInput, .stTextArea, .stButton {{
         display: block;
         margin-left: auto;
         margin-right: auto;
         width: 80%;
     }}
+
     .sparkle {{
         display: flex;
         justify-content: center;
@@ -40,6 +60,7 @@ st.markdown(f"""
         animation: breathe 8s ease-in-out infinite;
         animation-delay: 1s;
     }}
+
     @keyframes breathe {{
         0%   {{ transform: scale(1); }}
         25%  {{ transform: scale(4); }}
@@ -50,15 +71,28 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 
-# --- APP TITLE + NAVIGATION --- #
-st.title("Healing Bandaids 🩹✨")
-st.sidebar.title("Navigation")
-mode = st.sidebar.radio("Choose mode ✨", ["Healing Journal", "I Am Here Calendar", "View All Bandaids"])
+# --- AUDIO --- #
+st.audio("https://cdn.pixabay.com/audio/2022/03/15/audio_09e8a1e243.mp3", format="audio/mp3", start_time=0)
 
-# --- LOAD BANDAID IMAGES --- #
+# --- SIDEBAR LOGO --- #
+with st.sidebar:
+    if os.path.exists(LOGO_IMAGE):
+        st.image(LOGO_IMAGE, width=300)
+
+# --- TITLE + NAVIGATION --- #
+st.title("Healing Bandaids 🩹✨")
+mode = st.sidebar.radio("Choose mode ✨", [
+    "Healing Journal",
+    "I Am Here Calendar",
+    "Goal Streak Tracker",
+    "Reflection History",
+    "View All Bandaids"
+])
+
+# --- LOAD BANDAIDS --- #
 bandaid_images = [img for img in os.listdir(BANDAID_FOLDER) if img.endswith(".png")]
 
-# --- SESSION STATE INIT --- #
+# --- SESSION STATE --- #
 if "user_input" not in st.session_state:
     st.session_state.user_input = ""
 if "show_next" not in st.session_state:
@@ -67,15 +101,17 @@ if "chosen_bandaid" not in st.session_state:
     st.session_state.chosen_bandaid = random.choice(bandaid_images)
 if "calendar_marked" not in st.session_state:
     st.session_state.calendar_marked = False
-if "rerun_trigger" not in st.session_state:
-    st.session_state.rerun_trigger = 0
 
-# --- MODE: HEALING JOURNAL --- #
+# --- INIT REFLECTION FILE --- #
+if not os.path.exists(REFLECTION_FILE):
+    with open(REFLECTION_FILE, "w") as f:
+        json.dump({}, f)
+
+# --- HEALING JOURNAL --- #
 if mode == "Healing Journal":
     st.subheader("Daily Reflection")
 
     bandaid_path = os.path.join(BANDAID_FOLDER, st.session_state.chosen_bandaid)
-
     st.markdown('<div class="fade-in">', unsafe_allow_html=True)
     st.image(bandaid_path, use_container_width=True, caption="Your Healing Bandaid 💖")
     st.markdown('</div>', unsafe_allow_html=True)
@@ -84,26 +120,28 @@ if mode == "Healing Journal":
 
     if not st.session_state.show_next:
         user_input = st.text_area("Share your thoughts...", value=st.session_state.user_input, height=150)
-
         if user_input and user_input.strip() != "":
             st.session_state.user_input = user_input
             st.session_state.show_next = True
-            st.success("Thank you for your vulnerability. You are doing beautiful work 🌟🫶🏽")
+            with open(REFLECTION_FILE, "r") as f:
+                reflections = json.load(f)
+            reflections[date.today().isoformat()] = user_input
+            with open(REFLECTION_FILE, "w") as f:
+                json.dump(reflections, f)
+            st.success("Thank you for your vulnerability. You are doing beautiful work 🌟🪖")
 
     if st.session_state.show_next:
         if st.button("See next Healing Bandaid?"):
             st.session_state.chosen_bandaid = random.choice(bandaid_images)
             st.session_state.user_input = ""
             st.session_state.show_next = False
-            st.session_state.rerun_trigger += 1
-            st.experimental_rerun()
+            st.success("Here's your next Healing Bandaid 🩹✨")
 
-# --- MODE: I AM HERE CALENDAR --- #
+# --- I AM HERE CALENDAR --- #
 elif mode == "I Am Here Calendar":
-    st.header("I Am Here Calendar 📅")
+    st.header("I Am Here Calendar 🗓️")
     today = date.today()
     st.write(f"Today's date: **{today.strftime('%A, %B %d, %Y')}**")
-
     if not st.session_state.calendar_marked:
         if st.button("✨ I am here"):
             st.session_state.calendar_marked = True
@@ -113,11 +151,43 @@ elif mode == "I Am Here Calendar":
         st.markdown('<div class="sparkle">✨</div>', unsafe_allow_html=True)
         st.caption("Breathe in… and out… 💫 Let this sparkle guide your presence.")
 
-# --- MODE: VIEW ALL BANDAIDS --- #
+# --- GOAL STREAK TRACKER --- #
+elif mode == "Goal Streak Tracker":
+    st.header("Reflection Streak Tracker 📊")
+    with open(REFLECTION_FILE, "r") as f:
+        data = json.load(f)
+    if data:
+        df = pd.DataFrame(data.items(), columns=["Date", "Reflection"]).sort_values("Date")
+        dates = [datetime.strptime(d, "%Y-%m-%d") for d in data.keys()]
+        dates.sort()
+        streak = 0
+        today = datetime.today().date()
+        if today.isoformat() in data:
+            streak += 1
+        if (today - timedelta(days=1)).isoformat() in data:
+            streak += 1
+        streak_dates = [d.strftime("%Y-%m-%d") for d in dates]
+        streak_counts = list(range(1, len(streak_dates) + 1))
+        st.line_chart(pd.Series(streak_counts, index=streak_dates))
+        st.info(f"You're on a {streak}-day reflection streak! 🔥")
+    else:
+        st.warning("No reflections yet. Start journaling today!")
+
+# --- REFLECTION HISTORY --- #
+elif mode == "Reflection History":
+    st.header("Your Reflection History 📓")
+    with open(REFLECTION_FILE, "r") as f:
+        data = json.load(f)
+    if data:
+        df = pd.DataFrame(data.items(), columns=["Date", "Reflection"]).sort_values("Date", ascending=False)
+        st.dataframe(df, use_container_width=True)
+    else:
+        st.info("No reflections yet. Start your first one today 💭")
+
+# --- VIEW ALL BANDAIDS --- #
 elif mode == "View All Bandaids":
     st.header("All Healing Bandaids 🖼️")
     for img in bandaid_images:
         img_path = os.path.join(BANDAID_FOLDER, img)
         st.image(img_path, caption="", use_container_width=True)
     st.info("When you're ready to reflect, go back to 'Healing Journal' on the sidebar ✍️")
-
