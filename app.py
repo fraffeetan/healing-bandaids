@@ -15,7 +15,7 @@ chosen_bandaid = random.choice(bandaid_images)
 bandaid_path = os.path.join(bandaid_folder, chosen_bandaid)
 
 # Display the bandaid
-st.image(bandaid_path, use_column_width=True)
+st.image(bandaid_path, use_container_width=True)
 
 # Ask reflection question
 st.write("**In what way does this resonate with you today?**")
