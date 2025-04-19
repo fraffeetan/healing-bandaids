@@ -1,20 +1,17 @@
 import streamlit as st
 import random
 import os
+from datetime import date
 
 # --- CONFIG --- #
 BANDAID_FOLDER = "bandaids"
-BACKGROUND_IMAGE_URL = "https://raw.githubusercontent.com/fraffeetan/healing-bandaids/main/paper.png"  # CHANGE THIS!
+BG_COLOR = "#d8b2d1"  # soft purple aesthetic 💜
 
 # --- STYLING --- #
 st.markdown(f"""
     <style>
     html, body, .stApp {{
-        background-image: url('{BACKGROUND_IMAGE_URL}');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
+        background-color: {BG_COLOR};
     }}
     .fade-in {{
         animation: fadeIn ease 2s;
@@ -42,7 +39,7 @@ st.markdown(f"""
 # --- APP TITLE --- #
 st.title("Healing Bandaids 🩹✨")
 st.sidebar.title("Navigation")
-mode = st.sidebar.radio("Choose mode ✨", ["Healing Journal", "View All Bandaids"])
+mode = st.sidebar.radio("Choose mode ✨", ["Healing Journal", "View All Bandaids", "Calendar View"])
 
 # --- LOAD IMAGES --- #
 bandaid_images = [img for img in os.listdir(BANDAID_FOLDER) if img.endswith(".png")]
@@ -54,8 +51,10 @@ if "show_next" not in st.session_state:
     st.session_state.show_next = False
 if "chosen_bandaid" not in st.session_state:
     st.session_state.chosen_bandaid = random.choice(bandaid_images)
+if "rerun_trigger" not in st.session_state:
+    st.session_state.rerun_trigger = 0
 
-# --- VIEW ALL BANDAIDS MODE --- #
+# --- MODE: VIEW ALL BANDAIDS --- #
 if mode == "View All Bandaids":
     st.header("All Healing Bandaids 🖼️")
     for img in bandaid_images:
@@ -63,7 +62,14 @@ if mode == "View All Bandaids":
         st.image(img_path, caption=img, use_container_width=True)
     st.info("When you're ready to reflect, go back to 'Healing Journal' on the sidebar ✍️")
 
-# --- HEALING JOURNAL MODE --- #
+# --- MODE: CALENDAR VIEW --- #
+elif mode == "Calendar View":
+    st.header("Mindful Moments Calendar 📅")
+    st.write("Pick a day to reflect or just mark your presence 💖")
+    selected_day = st.date_input("Pick a date", date.today())
+    st.success(f"You're showing up for yourself today: {selected_day.strftime('%A, %B %d, %Y')} 🌟")
+
+# --- MODE: HEALING JOURNAL --- #
 else:
     st.subheader("Daily Reflection")
 
@@ -76,7 +82,6 @@ else:
 
     st.write("**In what way does this resonate with you today?**")
 
-    # Reflection logic
     if not st.session_state.show_next:
         user_input = st.text_area("Share your thoughts...", value=st.session_state.user_input)
 
@@ -85,10 +90,12 @@ else:
             st.session_state.show_next = True
             st.success("Thank you for your vulnerability. You are doing beautiful work 🌟🫶🏽")
 
-    # Show "Next" button only after reflecting
+    # Show next button only after reflection
     if st.session_state.show_next:
         if st.button("See next Healing Bandaid?"):
+            # Reset state manually instead of using experimental_rerun
             st.session_state.chosen_bandaid = random.choice(bandaid_images)
             st.session_state.user_input = ""
             st.session_state.show_next = False
+            st.session_state.rerun_trigger += 1  # Safe trigger to refresh state
             st.experimental_rerun()
