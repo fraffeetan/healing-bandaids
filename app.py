@@ -6,7 +6,7 @@ import os
 st.markdown("""
 <style>
 [data-testid="stAppViewContainer"] > .main {
-    background-image: url("https://raw.githubusercontent.com/yourusername/yourrepo/main/path/to/your/background_image.jpg");
+    background-image: url("https://github.com/fraffeetan/healing-bandaids/blob/16899cd1b531424138fb2e2e2ac269aebc46201d/paper.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
