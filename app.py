@@ -41,4 +41,4 @@ bandaid_images = os.listdir(bandaid_folder)
 
 # Pick a random bandaid
 chosen_bandaid = random.choice(bandaid_images)
-bandaid_path = os.path.join(bandaid_folder, chosen_b_
+bandaid_path = os.path.join(bandaid_folder, chosen_bandaid)
