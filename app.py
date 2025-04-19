@@ -1,13 +1,11 @@
 import streamlit as st
 import random
 import os
-import json
 from datetime import date, datetime, timedelta
 import pandas as pd
 
 # CONFIG
 BANDAID_FOLDER = "bandaids"
-REFLECTION_FILE = "reflection_history.json"
 LOGO_IMAGE = "bandaids-logo.png"
 
 # --- STYLING --- #
@@ -152,6 +150,8 @@ mode = st.sidebar.selectbox("Choose mode ✨", [
 ])
 
 # --- DEFAULT LANDING PAGE --- #
+if mode == "🦋 Welcome":
+    st.markdown("""
         <style>
         @keyframes butterflyFloat {
             0% { transform: translateY(-50px); opacity: 0; }
@@ -176,17 +176,18 @@ mode = st.sidebar.selectbox("Choose mode ✨", [
         <div class='butterfly'>🦋</div>
         <div class='butterfly'>🦋</div>
         <div class='butterfly'>🦋</div>
-        </div>
-        <style>
-        @keyframes breathe {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.3); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-        </style>
-    """, unsafe_allow_html=True)
 
-    
+        <div style='margin-top: 30px; font-size: 22px; line-height: 1.6;'>
+            <p>Welcome to your sanctuary of reflection and calm. 🩹💖</p>
+            <ul style='text-align: left; max-width: 600px; margin: 20px auto; padding-left: 0;'>
+                <li><b>🌈 Mood Meter</b> – Track how you're feeling from "Surviving" to "Thriving"</li>
+                <li><b>✍️ Healing Journal</b> – Reflect with a new healing bandaid each time</li>
+                <li><b>📅 I Am Here Calendar</b> – Be present and honor your journey</li>
+                <li><b>🖼️ View All Bandaids</b> – Browse your healing collection</li>
+            </ul>
+            <p>Take a deep breath. You're in a safe space now. 🌿</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 # --- LOAD BANDAIDS --- #
 bandaid_images = [img for img in os.listdir(BANDAID_FOLDER) if img.endswith(".png")]
@@ -217,11 +218,7 @@ if mode == "✍️ Healing Journal":
         if user_input and user_input.strip() != "":
             st.session_state.user_input = user_input
             st.session_state.show_next = True
-            with open(REFLECTION_FILE, "r") as f:
-                reflections = json.load(f)
-            reflections.append({"datetime": datetime.utcnow() + timedelta(hours=8), "reflection": user_input})
-            with open(REFLECTION_FILE, "w") as f:
-                json.dump(reflections, f)
+            # Reflection is not saved; reset every session
             st.success("Thank you for your vulnerability. You are doing beautiful work 🌟🪖")
             st.markdown("""
             <style>
