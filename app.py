@@ -85,6 +85,12 @@ st.markdown(f"""
         0% { opacity: 0; transform: translateY(20px); }
         100% { opacity: 1; transform: translateY(0); }
     }
+    [data-testid="stDataFrame"] {
+        background-color: #cbada7 !important;
+        color: #245444 !important;
+        font-family: 'Abril Fatface', cursive !important;
+        border-radius: 10px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
