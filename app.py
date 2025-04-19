@@ -31,9 +31,11 @@ st.markdown(f"""
         color: #245444;
     }}
 
-    section[data-testid="stSidebar"] label, section[data-testid="stSidebar"] .css-1aumxhk, section[data-testid="stSidebar"] .stRadio > div {
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] .css-1aumxhk,
+    section[data-testid="stSidebar"] .stRadio > div {
         color: #245444 !important;
-    }}
+    }
 
     .css-1v3fvcr {{  /* reflection streak background */
         background-color: #cbada7 !important;
@@ -256,7 +258,7 @@ elif mode == "Reflection History":
 # --- MOOD METER --- #
 elif mode == "Mood Meter":
     st.markdown('<div class="fade-slide">', unsafe_allow_html=True)
-st.header("Mood Meter 🌈")
+    st.header("Mood Meter 🌈")
     st.write("How are you feeling today?")
     mood = st.slider("", min_value=0, max_value=100, value=50, step=1,
                      format=None, label_visibility="collapsed")
@@ -266,9 +268,7 @@ st.header("Mood Meter 🌈")
         st.markdown("### 🌱 In Progress… Growing")
     else:
         st.markdown("### 🦋 Thriving and Slaying")
-
-# --- VIEW ALL BANDAIDS --- #
-st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 elif mode == "View All Bandaids":
     st.header("All Healing Bandaids 🖼️")
