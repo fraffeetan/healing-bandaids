@@ -98,6 +98,24 @@ st.markdown("""
         [data-testid="stSidebar"] .stRadio > div > label {
         color: #245444 !important;
     }
+    .flower {
+        position: fixed;
+        top: 0;
+        font-size: 32px;
+        animation: flowerRain 6s linear infinite;
+        z-index: 9999;
+        opacity: 0;
+    }
+    .flower:nth-child(1) { left: 5%; animation-delay: 0s; }
+    .flower:nth-child(2) { left: 15%; animation-delay: 1s; }
+    .flower:nth-child(3) { left: 25%; animation-delay: 2s; }
+    .flower:nth-child(4) { left: 35%; animation-delay: 3s; }
+    .flower:nth-child(5) { left: 45%; animation-delay: 4s; }
+    .flower:nth-child(6) { left: 55%; animation-delay: 5s; }
+    .flower:nth-child(7) { left: 65%; animation-delay: 6s; }
+    .flower:nth-child(8) { left: 75%; animation-delay: 7s; }
+    .flower:nth-child(9) { left: 85%; animation-delay: 8s; }
+    .flower:nth-child(10) { left: 95%; animation-delay: 9s; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -110,6 +128,7 @@ with st.sidebar:
 st.title("Healing Bandaids 🩹✨")
 mode = st.sidebar.radio("Choose mode ✨", ["Welcome 🦋",
     "Mood Meter",
+    "Mood History",
     "Healing Journal",
     "I Am Here Calendar",
     "Goal Streak Tracker",
@@ -267,6 +286,11 @@ elif mode == "Mood Meter":
     st.write("How are you feeling today?")
     mood = st.slider("", min_value=0, max_value=100, value=50, step=1,
                      format=None, label_visibility="collapsed")
+    if "mood_history" not in st.session_state:
+        st.session_state.mood_history = []
+    if st.button("Log this mood"):
+        st.session_state.mood_history.append({"datetime": datetime.now().isoformat(), "mood": mood})
+        st.success("Mood logged 🌈")
     if mood <= 33:
         st.markdown("### 🐢 Trying and Surviving")
     elif mood <= 66:
@@ -275,10 +299,22 @@ elif mode == "Mood Meter":
         st.markdown("### 🦋 Thriving and Slaying")
     st.markdown('</div>', unsafe_allow_html=True)
 
+elif mode == "Mood History":
+    st.header("Your Mood History 📈")
+    mood_data = st.session_state.get("mood_history", [])
+    if mood_data:
+        df = pd.DataFrame(mood_data)
+        df["datetime"] = pd.to_datetime(df["datetime"])
+        df["date"] = df["datetime"].dt.strftime("%Y-%m-%d %H:%M")
+        df = df[["date", "mood"]].sort_values("date", ascending=False)
+        st.dataframe(df.rename(columns={"date": "Date", "mood": "Mood Value"}), use_container_width=True)
+        st.line_chart(df.set_index("Date")[["Mood Value"]])
+    else:
+        st.info("No mood logs yet. Try using the Mood Meter 🌈")
+
 elif mode == "View All Bandaids":
     st.header("All Healing Bandaids 🖼️")
     for img in bandaid_images:
         img_path = os.path.join(BANDAID_FOLDER, img)
         st.image(img_path, caption="", use_container_width=True)
     st.info("When you're ready to reflect, go back to 'Healing Journal' on the sidebar ✍️")
-
