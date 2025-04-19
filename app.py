@@ -7,7 +7,6 @@ import pandas as pd
 
 # CONFIG
 BANDAID_FOLDER = "bandaids"
-REFLECTION_FILE = None
 REFLECTION_FILE = "reflection_history.json"
 LOGO_IMAGE = "bandaids-logo.png"
 
@@ -153,23 +152,31 @@ mode = st.sidebar.selectbox("Choose mode ✨", [
 ])
 
 # --- DEFAULT LANDING PAGE --- #
-if mode == "🦋 Welcome":
-    st.markdown("""
-        <div style='font-size: 60px; animation: breathe 4s ease-in-out infinite;'>🦋</div>
-        <div style='margin-top: 30px; font-size: 22px; line-height: 1.6;'>
-            <p>Hi <strong>{}</strong>! Welcome to your sanctuary of reflection and calm. 🩹💖</p>
-            Here’s what you can explore:
-<ul style='text-align: left; max-width: 600px; margin: 20px auto; padding-left: 0;'>
-    <li><b>Welcome 🦋</b> – Your soft landing page with guidance and directory</li>
-    <li><b>Mood Meter</b> 🌈 – Track how you're feeling from "Surviving" to "Thriving"</li>
-    <li><b>Mood History</b> 📈 – View all your mood check-ins in table and chart form</li>
-    <li><b>Healing Journal</b> ✍️ – Reflect with a new healing bandaid each time</li>
-    <li><b>I Am Here Calendar</b> 📅 – Be present and honor your journey</li>
-    <li><b>Goal Streak Tracker</b> 📊 – Watch your reflection habits bloom</li>
-    <li><b>Reflection History</b> 📓 – See everything you've journaled</li>
-    <li><b>View All Bandaids</b> 🖼️ – Browse your healing collection of bandaids</li>
-</ul>
-            <p>Take a deep breath. You're in a safe space now. 🌿</p>
+
+        <style>
+        @keyframes butterflyFloat {
+            0% { transform: translateY(-50px); opacity: 0; }
+            50% { transform: translateY(10vh); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        .butterfly {
+            position: fixed;
+            top: 0;
+            font-size: 40px;
+            animation: butterflyFloat 10s ease-in-out infinite;
+            z-index: 9999;
+        }
+        .butterfly:nth-child(1) { left: 5%; animation-delay: 0s; }
+        .butterfly:nth-child(2) { left: 15%; animation-delay: 2s; }
+        .butterfly:nth-child(3) { left: 25%; animation-delay: 4s; }
+        .butterfly:nth-child(4) { left: 35%; animation-delay: 6s; }
+        .butterfly:nth-child(5) { left: 45%; animation-delay: 8s; }
+        </style>
+        <div class='butterfly'>🦋</div>
+        <div class='butterfly'>🦋</div>
+        <div class='butterfly'>🦋</div>
+        <div class='butterfly'>🦋</div>
+        <div class='butterfly'>🦋</div>
         </div>
         <style>
         @keyframes breathe {
@@ -178,7 +185,7 @@ if mode == "🦋 Welcome":
             100% { transform: scale(1); opacity: 0.8; }
         }
         </style>
-    """.format(st.session_state.get("nickname", "beautiful soul")), unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     if st.button("🔁 Reset / Log out"):
         st.session_state.clear()
@@ -251,7 +258,7 @@ if mode == "✍️ Healing Journal":
 # --- I AM HERE CALENDAR --- #
 elif mode == "📅 I Am Here Calendar":
     st.header("I Am Here Calendar 🗓️")
-    today = date.today()
+    today = (datetime.utcnow() + timedelta(hours=8)).date()
     st.write(f"Today's date: **{today.strftime('%A, %B %d, %Y')}**")
     if not st.session_state.calendar_marked:
         if st.button("✨ I am here"):
@@ -262,10 +269,8 @@ elif mode == "📅 I Am Here Calendar":
         st.markdown('<div class="sparkle">✨</div>', unsafe_allow_html=True)
         st.caption("Breathe in… and out… 💫 Let this sparkle guide your presence.")
 
-# --- GOAL STREAK TRACKER --- #
 
 
-# --- REFLECTION HISTORY --- #
 
 
 # --- MOOD METER --- #
@@ -275,11 +280,20 @@ elif mode == "🌈 Mood Meter":
     st.write("How are you feeling today?")
     mood = st.slider("", min_value=0, max_value=100, value=50, step=1,
                      format=None, label_visibility="collapsed")
-    key = f"mood_history_{st.session_state.nickname}"
-    st.session_state.setdefault(key, [])
+    if "mood_history" not in st.session_state:
+        st.session_state["mood_history"] = []
     if st.button("Log this mood"):
-        st.session_state[key].append({"datetime": datetime.utcnow() + timedelta(hours=8), "mood": mood})
-        st.success("Mood logged 🌈")
+        st.session_state["mood_history"].append({"datetime": datetime.utcnow() + timedelta(hours=8), "mood": mood})
+
+        if mood <= 33:
+            st.success("Mood logged 🌈")
+            st.markdown("#### 🌒 Even the moon has nights without light. Be still. Be held. Let softness meet your sorrow.")
+        elif mood <= 66:
+            st.success("Mood logged 🌈")
+            st.markdown("#### 🌿 Your roots are reaching before your blooms show. Trust the quiet persistence of your becoming.")
+        else:
+            st.success("Mood logged 🌈")
+            st.markdown("#### ✨ You’re radiant and rising. May your joy ripple beyond today — bold, bright, and beautifully yours.")
         st.markdown("""
         <style>
         @keyframes sparkleRain {
