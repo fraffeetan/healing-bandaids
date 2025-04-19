@@ -146,7 +146,9 @@ mode = st.sidebar.selectbox("Choose mode ✨", [
     "🌈 Mood Meter",
     "✍️ Healing Journal",
     "📅 I Am Here Calendar",
-    "🖼️ View All Bandaids"
+    "🖼️ View All Bandaids",
+    "🦋 About the Creator",
+    "🌿 About the Creation"
 ])
 
 # --- DEFAULT LANDING PAGE --- #
@@ -224,6 +226,26 @@ if mode == "✍️ Healing Journal":
             st.session_state.chosen_bandaid = random.choice(bandaid_images)
             st.session_state.user_input = ""
             st.session_state.show_next = False
+
+# --- ABOUT THE CREATOR --- #
+elif mode == "🦋 About the Creator":
+    st.markdown("""
+    <div style='margin-top: 30px; font-size: 22px; line-height: 1.6;'>
+        <p><strong>Fran</strong> (Artist name: <strong>Fraffee</strong>) is someone who codes like they write poetry, and she writes poetry like the way she paints — with gentleness, intention, and love.</p>
+        <p>A builder of soft digital spaces, Fran believes that reflection doesn’t have to be clinical or cold — it can be warm, whimsical, and wrapped in sparkles. ✨</p>
+        <p>Whether it's choosing the perfect pastel for a slider, writing heart-hugging affirmations, or making butterflies pulse to the rhythm of a breath, her goal is simple: <br><strong>To create moments of stillness for those who need them.</strong></p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# --- ABOUT THE CREATION --- #
+elif mode == "🌿 About the Creation":
+    st.markdown("""
+    <div style='margin-top: 30px; font-size: 22px; line-height: 1.6;'>
+        <p>This app is not about metrics. It’s about meaning.</p>
+        <p>No tracking. No pressure. Just healing — one soft step at a time. 🌿</p>
+        <p style='margin-top: 3em; font-size: 18px;'>Made with love by <strong>Fraffee</strong> 🌱</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # --- I AM HERE CALENDAR --- #
 elif mode == "📅 I Am Here Calendar":
