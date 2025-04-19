@@ -152,7 +152,6 @@ mode = st.sidebar.selectbox("Choose mode ✨", [
 ])
 
 # --- DEFAULT LANDING PAGE --- #
-
         <style>
         @keyframes butterflyFloat {
             0% { transform: translateY(-50px); opacity: 0; }
@@ -187,9 +186,7 @@ mode = st.sidebar.selectbox("Choose mode ✨", [
         </style>
     """, unsafe_allow_html=True)
 
-    if st.button("🔁 Reset / Log out"):
-        st.session_state.clear()
-        st.experimental_rerun()
+    
 
 # --- LOAD BANDAIDS --- #
 bandaid_images = [img for img in os.listdir(BANDAID_FOLDER) if img.endswith(".png")]
