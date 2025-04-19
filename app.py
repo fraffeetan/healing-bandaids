@@ -152,35 +152,11 @@ mode = st.sidebar.selectbox("Choose mode ✨", [
 # --- DEFAULT LANDING PAGE --- #
 if mode == "🦋 Welcome":
     st.markdown("""
-        <style>
-        @keyframes butterflyFloat {
-            0% { transform: translateY(-50px); opacity: 0; }
-            50% { transform: translateY(10vh); opacity: 1; }
-            100% { transform: translateY(100vh); opacity: 0; }
-        }
-        .butterfly {
-            position: fixed;
-            top: 0;
-            font-size: 40px;
-            animation: butterflyFloat 10s ease-in-out infinite;
-            z-index: 9999;
-        }
-        .butterfly:nth-child(1) { left: 5%; animation-delay: 0s; }
-        .butterfly:nth-child(2) { left: 15%; animation-delay: 2s; }
-        .butterfly:nth-child(3) { left: 25%; animation-delay: 4s; }
-        .butterfly:nth-child(4) { left: 35%; animation-delay: 6s; }
-        .butterfly:nth-child(5) { left: 45%; animation-delay: 8s; }
-        </style>
-        <div class='butterfly'>🦋</div>
-        <div class='butterfly'>🦋</div>
-        <div class='butterfly'>🦋</div>
-        <div class='butterfly'>🦋</div>
-        <div class='butterfly'>🦋</div>
-
+        <div class='sparkle'>🦋</div>
         <div style='margin-top: 30px; font-size: 22px; line-height: 1.6;'>
             <p>Welcome to your sanctuary of reflection and calm. 🩹💖</p>
             <ul style='text-align: left; max-width: 600px; margin: 20px auto; padding-left: 0;'>
-                <li><b>🌈 Mood Meter</b> – Track how you're feeling from "Surviving" to "Thriving"</li>
+                <li><b>🌈 Mood Meter</b> – Track how you're feeling from \"Surviving\" to \"Thriving\"</li>
                 <li><b>✍️ Healing Journal</b> – Reflect with a new healing bandaid each time</li>
                 <li><b>📅 I Am Here Calendar</b> – Be present and honor your journey</li>
                 <li><b>🖼️ View All Bandaids</b> – Browse your healing collection</li>
