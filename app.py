@@ -7,7 +7,9 @@ import pandas as pd
 
 # CONFIG
 BANDAID_FOLDER = "bandaids"
-REFLECTION_FILE = "reflection_history.json"
+REFLECTION_FILE = None
+if "nickname" in st.session_state:
+    REFLECTION_FILE = f"reflection_history_{st.session_state.nickname}.json"
 LOGO_IMAGE = "bandaids-logo.png"
 
 # --- STYLING --- #
@@ -33,7 +35,9 @@ st.markdown("""
 
     section[data-testid="stSidebar"] label,
     section[data-testid="stSidebar"] .css-1aumxhk,
-    section[data-testid="stSidebar"] .stRadio > div {
+    section[data-testid="stSidebar"] .stRadio > div,
+    section[data-testid="stSidebar"] .stRadio label,
+    section[data-testid="stSidebar"] .stRadio span {
         color: #245444 !important;
     }
 
@@ -116,8 +120,32 @@ st.markdown("""
     .flower:nth-child(8) { left: 75%; animation-delay: 7s; }
     .flower:nth-child(9) { left: 85%; animation-delay: 8s; }
     .flower:nth-child(10) { left: 95%; animation-delay: 9s; }
+    div[data-baseweb="slider"] .css-14v1g6z {
+        background: linear-gradient(to right, #fbc3bc, #f8ad9d);
+    }
+    div[data-baseweb="slider"] .css-1ld3z1x {
+        background-color: white !important;
+        border: 3px solid #f8ad9d !important;
+    }
+    div[data-baseweb="slider"] .css-1ld3z1x:before {
+        content: "🐢";
+        position: absolute;
+        top: -25px;
+        left: -10px;
+        font-size: 20px;
+        transition: content 0.3s ease;
+    }
 </style>
 """, unsafe_allow_html=True)
+
+# --- USER NICKNAME --- #
+if "nickname" not in st.session_state:
+    with st.sidebar:
+        st.markdown("### 💌 Let's personalize your healing journey")
+        nickname = st.text_input("Enter your nickname")
+        if nickname:
+            st.session_state.nickname = nickname
+            st.experimental_rerun()
 
 # --- SIDEBAR LOGO --- #
 with st.sidebar:
@@ -141,17 +169,19 @@ if mode == "Welcome 🦋":
     st.markdown("""
         <div style='font-size: 60px; animation: breathe 4s ease-in-out infinite;'>🦋</div>
         <div style='margin-top: 30px; font-size: 22px; line-height: 1.6;'>
-            Welcome to <strong>Healing Bandaids</strong> 🩹 – your space to reflect, breathe, and grow. 💖<br><br>
+            <p>Hi <strong>{}</strong>! Welcome to your sanctuary of reflection and calm. 🩹💖</p>
             Here’s what you can explore:
-            <ul style='text-align: left; max-width: 600px; margin: 20px auto; padding-left: 0;'>
-                <li><b>Mood Meter</b> 🌈 – Track how you're feeling from \"Surviving\" to \"Thriving\"</li>
-                <li><b>Healing Journal</b> ✍️ – Reflect with a new healing bandaid each time</li>
-                <li><b>I Am Here Calendar</b> 📅 – Be present and honor your journey</li>
-                <li><b>Goal Streak Tracker</b> 📊 – Watch your reflection habits bloom</li>
-                <li><b>Reflection History</b> 📓 – See everything you've journaled</li>
-                <li><b>View All Bandaids</b> 🖼️ – Browse your healing collection</li>
-            </ul>
-            Take a deep breath. You're in a safe space now. 🌿
+<ul style='text-align: left; max-width: 600px; margin: 20px auto; padding-left: 0;'>
+    <li><b>Welcome 🦋</b> – Your soft landing page with guidance and directory</li>
+    <li><b>Mood Meter</b> 🌈 – Track how you're feeling from "Surviving" to "Thriving"</li>
+    <li><b>Mood History</b> 📈 – View all your mood check-ins in table and chart form</li>
+    <li><b>Healing Journal</b> ✍️ – Reflect with a new healing bandaid each time</li>
+    <li><b>I Am Here Calendar</b> 📅 – Be present and honor your journey</li>
+    <li><b>Goal Streak Tracker</b> 📊 – Watch your reflection habits bloom</li>
+    <li><b>Reflection History</b> 📓 – See everything you've journaled</li>
+    <li><b>View All Bandaids</b> 🖼️ – Browse your healing collection of bandaids</li>
+</ul>
+            <p>Take a deep breath. You're in a safe space now. 🌿</p>
         </div>
         <style>
         @keyframes breathe {
@@ -160,7 +190,11 @@ if mode == "Welcome 🦋":
             100% { transform: scale(1); opacity: 0.8; }
         }
         </style>
-    """, unsafe_allow_html=True)
+    """.format(st.session_state.get("nickname", "beautiful soul")), unsafe_allow_html=True)
+
+    if st.button("🔁 Reset / Log out"):
+        st.session_state.clear()
+        st.experimental_rerun()
 
 # --- LOAD BANDAIDS --- #
 bandaid_images = [img for img in os.listdir(BANDAID_FOLDER) if img.endswith(".png")]
@@ -181,7 +215,7 @@ if not os.path.exists(REFLECTION_FILE):
         json.dump([], f)
 
 # --- HEALING JOURNAL --- #
-if mode == "Healing Journal":
+if mode == "Healing Journal" and "nickname" in st.session_state:
     st.subheader("Daily Reflection")
 
     bandaid_path = os.path.join(BANDAID_FOLDER, st.session_state.chosen_bandaid)
@@ -198,7 +232,7 @@ if mode == "Healing Journal":
             st.session_state.show_next = True
             with open(REFLECTION_FILE, "r") as f:
                 reflections = json.load(f)
-            reflections.append({"datetime": datetime.now().isoformat(), "reflection": user_input})
+            reflections.append({"datetime": datetime.utcnow() + timedelta(hours=8), "reflection": user_input})
             with open(REFLECTION_FILE, "w") as f:
                 json.dump(reflections, f)
             st.success("Thank you for your vulnerability. You are doing beautiful work 🌟🪖")
@@ -266,7 +300,7 @@ elif mode == "Goal Streak Tracker":
     st.markdown('</div>', unsafe_allow_html=True)
 
 # --- REFLECTION HISTORY --- #
-elif mode == "Reflection History":
+elif mode == "Reflection History" and "nickname" in st.session_state:
     st.header("Your Reflection History 📓")
     with open(REFLECTION_FILE, "r") as f:
         data = json.load(f)
@@ -280,14 +314,14 @@ elif mode == "Reflection History":
         st.info("No reflections yet. Start your first one today 💭")
 
 # --- MOOD METER --- #
-elif mode == "Mood Meter":
+elif mode == "Mood Meter" and "nickname" in st.session_state:
     st.markdown('<div class="fade-slide">', unsafe_allow_html=True)
     st.header("Mood Meter 🌈")
     st.write("How are you feeling today?")
     mood = st.slider("", min_value=0, max_value=100, value=50, step=1,
                      format=None, label_visibility="collapsed")
     if "mood_history" not in st.session_state:
-        st.session_state.mood_history = []
+        st.session_state.setdefault(f"mood_history_{st.session_state.nickname}", []) = []
     if st.button("Log this mood"):
         st.session_state.mood_history.append({"datetime": datetime.now().isoformat(), "mood": mood})
         st.success("Mood logged 🌈")
@@ -299,15 +333,17 @@ elif mode == "Mood Meter":
         st.markdown("### 🦋 Thriving and Slaying")
     st.markdown('</div>', unsafe_allow_html=True)
 
-elif mode == "Mood History":
+elif mode == "Mood History" and "nickname" in st.session_state:
     st.header("Your Mood History 📈")
-    mood_data = st.session_state.get("mood_history", [])
+    mood_data = st.session_state.get(f"mood_history_{st.session_state.nickname}", [])
     if mood_data:
         df = pd.DataFrame(mood_data)
         df["datetime"] = pd.to_datetime(df["datetime"])
         df["date"] = df["datetime"].dt.strftime("%Y-%m-%d %H:%M")
         df = df[["date", "mood"]].sort_values("date", ascending=False)
-        st.dataframe(df.rename(columns={"date": "Date", "mood": "Mood Value"}), use_container_width=True)
+        df = df.rename(columns={"date": "Date", "mood": "Mood Emoji"})
+        df["Mood Emoji"] = df["Mood Emoji"].apply(lambda x: "🐢" if x <= 33 else "🌱" if x <= 66 else "🦋")
+        st.dataframe(df, use_container_width=True)
         st.line_chart(df.set_index("Date")[["Mood Value"]])
     else:
         st.info("No mood logs yet. Try using the Mood Meter 🌈")
