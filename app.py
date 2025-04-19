@@ -28,7 +28,7 @@ st.markdown(f"""
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: #4e6d60;
+        color: #245444;
     }}
 
     .css-1v3fvcr {{  /* reflection streak background */
@@ -79,7 +79,7 @@ st.markdown(f"""
 # --- SIDEBAR LOGO --- #
 with st.sidebar:
     if os.path.exists(LOGO_IMAGE):
-        st.image(LOGO_IMAGE, width=120)
+        st.image(LOGO_IMAGE, width=1000)
 
 # --- TITLE + NAVIGATION --- #
 st.title("Healing Bandaids 🩹✨")
