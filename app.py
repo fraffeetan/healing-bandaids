@@ -320,10 +320,10 @@ elif mode == "Mood Meter" and "nickname" in st.session_state:
     st.write("How are you feeling today?")
     mood = st.slider("", min_value=0, max_value=100, value=50, step=1,
                      format=None, label_visibility="collapsed")
-    if "mood_history" not in st.session_state:
-        st.session_state.setdefault(f"mood_history_{st.session_state.nickname}", []) = []
+    key = f"mood_history_{st.session_state.nickname}"
+    st.session_state.setdefault(key, [])
     if st.button("Log this mood"):
-        st.session_state.mood_history.append({"datetime": datetime.now().isoformat(), "mood": mood})
+        st.session_state[key].append({"datetime": datetime.utcnow() + timedelta(hours=8), "mood": mood})
         st.success("Mood logged 🌈")
     if mood <= 33:
         st.markdown("### 🐢 Trying and Surviving")
