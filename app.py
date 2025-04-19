@@ -95,7 +95,10 @@ st.markdown("""
         font-family: 'Abril Fatface', cursive !important;
         border-radius: 10px;
     }
-    </style>
+        [data-testid="stSidebar"] .stRadio > div > label {
+        color: #245444 !important;
+    }
+</style>
 """, unsafe_allow_html=True)
 
 # --- SIDEBAR LOGO --- #
@@ -122,7 +125,7 @@ if mode == "Welcome 🦋":
             Welcome to <strong>Healing Bandaids</strong> 🩹 – your space to reflect, breathe, and grow. 💖<br><br>
             Here’s what you can explore:
             <ul style='text-align: left; max-width: 600px; margin: 20px auto; padding-left: 0;'>
-                <li><b>Mood Meter</b> 🌈 – Track how you're feeling from "Trying" to "Thriving"</li>
+                <li><b>Mood Meter</b> 🌈 – Track how you're feeling from \"Surviving\" to \"Thriving\"</li>
                 <li><b>Healing Journal</b> ✍️ – Reflect with a new healing bandaid each time</li>
                 <li><b>I Am Here Calendar</b> 📅 – Be present and honor your journey</li>
                 <li><b>Goal Streak Tracker</b> 📊 – Watch your reflection habits bloom</li>
@@ -278,3 +281,4 @@ elif mode == "View All Bandaids":
         img_path = os.path.join(BANDAID_FOLDER, img)
         st.image(img_path, caption="", use_container_width=True)
     st.info("When you're ready to reflect, go back to 'Healing Journal' on the sidebar ✍️")
+
