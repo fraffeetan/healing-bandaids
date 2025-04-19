@@ -4,6 +4,12 @@ import os
 from datetime import date, datetime, timedelta
 import pandas as pd
 
+st.set_page_config(
+    page_title="Healing Bandaids 🩹✨",
+    page_icon="🦋",
+    layout="centered"
+)
+
 # CONFIG
 BANDAID_FOLDER = "bandaids"
 LOGO_IMAGE = "bandaids-logo.png"
@@ -229,9 +235,10 @@ if mode == "✍️ Healing Journal":
 
 # --- ABOUT THE CREATOR --- #
 elif mode == "🦋 About the Creator":
+    st.image("fraffee-photo.png", width=300)
     st.markdown("""
     <div style='margin-top: 30px; font-size: 22px; line-height: 1.6;'>
-        <p><strong>Fran</strong> (Artist name: <strong>Fraffee</strong>) is someone who codes like they write poetry, and she writes poetry like the way she paints — with gentleness, intention, and love.</p>
+        <p><strong>Fran</strong> (Artist name: <strong>Fraffee</strong>) is someone who codes in the way she writes poetry, and she writes poetry like the way she paints — with gentleness, intention, and love.</p>
         <p>A builder of soft digital spaces, Fran believes that reflection doesn’t have to be clinical or cold — it can be warm, whimsical, and wrapped in sparkles. ✨</p>
         <p>Whether it's choosing the perfect pastel for a slider, writing heart-hugging affirmations, or making butterflies pulse to the rhythm of a breath, her goal is simple: <br><strong>To create moments of stillness for those who need them.</strong></p>
     </div>
@@ -322,6 +329,7 @@ elif mode == "🌈 Mood Meter":
 
 elif mode == "🖼️ View All Bandaids":
     st.header("All Healing Bandaids 🖼️")
+    st.markdown("<p style='font-size: 18px; margin-bottom: 2em;'>All artwork was made by <strong>Fraffee</strong> via the #The100DayProject and can be found on her Instagram at <a href='https://www.instagram.com/fraffee/' target='_blank' style='color: #fce0cf; text-decoration: underline;'>@fraffee</a></p>", unsafe_allow_html=True)
     for img in bandaid_images:
         img_path = os.path.join(BANDAID_FOLDER, img)
         st.image(img_path, caption="", use_container_width=True)
