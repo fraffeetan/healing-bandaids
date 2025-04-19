@@ -22,8 +22,8 @@ st.markdown(f"""
         text-align: center;
     }}
 
-    section[data-testid="stSidebar"] > div:first-child {{
-        background-color: #fbe3cc;
+    section[data-testid="stSidebar"] > div:first-child {
+        background-color: #fce0cf;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -31,7 +31,7 @@ st.markdown(f"""
         color: #245444;
     }}
 
-    section[data-testid="stSidebar"] label, section[data-testid="stSidebar"] .css-1aumxhk {{
+    section[data-testid="stSidebar"] label, section[data-testid="stSidebar"] .css-1aumxhk, section[data-testid="stSidebar"] .stRadio > div {
         color: #245444 !important;
     }}
 
@@ -77,7 +77,15 @@ st.markdown(f"""
         75%  {{ transform: scale(1); }}
         100% {{ transform: scale(1); }}
     }}
-    </style>
+        .fade-slide {
+        animation: fadeSlide 0.8s ease-in-out;
+    }
+
+    @keyframes fadeSlide {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+</style>
 """, unsafe_allow_html=True)
 
 # --- SIDEBAR LOGO --- #
@@ -87,13 +95,40 @@ with st.sidebar:
 
 # --- TITLE + NAVIGATION --- #
 st.title("Healing Bandaids 🩹✨")
-mode = st.sidebar.radio("Choose mode ✨", [
+mode = st.sidebar.radio("Choose mode ✨", ["Welcome 🦋",
+    "Mood Meter",
     "Healing Journal",
     "I Am Here Calendar",
     "Goal Streak Tracker",
     "Reflection History",
     "View All Bandaids"
 ])
+
+# --- DEFAULT LANDING PAGE --- #
+if mode == "Welcome 🦋":
+    st.markdown("""
+        <div style='font-size: 60px; animation: breathe 4s ease-in-out infinite;'>🦋</div>
+        <div style='margin-top: 30px; font-size: 22px; line-height: 1.6;'>
+            Welcome to <strong>Healing Bandaids</strong> 🩹 – your space to reflect, breathe, and grow. 💖<br><br>
+            Here’s what you can explore:
+            <ul style='text-align: left; max-width: 600px; margin: 20px auto; padding-left: 0;'>
+                <li><b>Mood Meter</b> 🌈 – Track how you're feeling from "Trying" to "Thriving"</li>
+                <li><b>Healing Journal</b> ✍️ – Reflect with a new healing bandaid each time</li>
+                <li><b>I Am Here Calendar</b> 📅 – Be present and honor your journey</li>
+                <li><b>Goal Streak Tracker</b> 📊 – Watch your reflection habits bloom</li>
+                <li><b>Reflection History</b> 📓 – See everything you've journaled</li>
+                <li><b>View All Bandaids</b> 🖼️ – Browse your healing collection</li>
+            </ul>
+            Take a deep breath. You're in a safe space now. 🌿
+        </div>
+        <style>
+        @keyframes breathe {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
 # --- LOAD BANDAIDS --- #
 bandaid_images = [img for img in os.listdir(BANDAID_FOLDER) if img.endswith(".png")]
@@ -141,21 +176,21 @@ if mode == "Healing Journal":
                 0% { transform: translateY(-50px); opacity: 1; }
                 100% { transform: translateY(100vh); opacity: 0; }
             }
-            .flower {{
+            .flower {
                 position: fixed;
                 top: 0;
-                left: 50%;
                 font-size: 40px;
-                animation: flowerRain 5s linear infinite;
+                animation: flowerRain 5s linear forwards;
                 z-index: 9999;
-            }}
+                opacity: 0;
+            }
             </style>
-            <div class='flower'>🌸</div>
-            <div class='flower' style='left: 30%;'>🌼</div>
-            <div class='flower' style='left: 70%;'>🌺</div>
-            <div class='flower' style='left: 40%;'>💐</div>
-            <div class='flower' style='left: 60%;'>🌷</div>
-            <div class='flower' style='left: 20%;'>🌻</div>
+            <div class='flower' style='left: 10%; animation-delay: 0s;'>🌸</div>
+            <div class='flower' style='left: 25%; animation-delay: 0.5s;'>🌼</div>
+            <div class='flower' style='left: 40%; animation-delay: 1s;'>🌺</div>
+            <div class='flower' style='left: 55%; animation-delay: 1.5s;'>💐</div>
+            <div class='flower' style='left: 70%; animation-delay: 2s;'>🌷</div>
+            <div class='flower' style='left: 85%; animation-delay: 2.5s;'>🌻</div>
             """, unsafe_allow_html=True)
 
     if st.session_state.show_next:
@@ -212,7 +247,23 @@ elif mode == "Reflection History":
     else:
         st.info("No reflections yet. Start your first one today 💭")
 
+# --- MOOD METER --- #
+elif mode == "Mood Meter":
+    st.markdown('<div class="fade-slide">', unsafe_allow_html=True)
+st.header("Mood Meter 🌈")
+    st.write("How are you feeling today?")
+    mood = st.slider("", min_value=0, max_value=100, value=50, step=1,
+                     format=None, label_visibility="collapsed")
+    if mood <= 33:
+        st.markdown("### 🐢 Trying and Surviving")
+    elif mood <= 66:
+        st.markdown("### 🌱 In Progress… Growing")
+    else:
+        st.markdown("### 🦋 Thriving and Slaying")
+
 # --- VIEW ALL BANDAIDS --- #
+st.markdown('</div>', unsafe_allow_html=True)
+
 elif mode == "View All Bandaids":
     st.header("All Healing Bandaids 🖼️")
     for img in bandaid_images:
