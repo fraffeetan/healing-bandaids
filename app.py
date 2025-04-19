@@ -7,6 +7,26 @@ st.markdown("""
     <style>
     .stApp {
         background-color: #d8b2d1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+    }
+    .stButton button {
+        display: block;
+        margin: 10px auto;
+        background-color: #f1c6d9;
+        color: #4a4a4a;
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+    }
+    .stButton button:hover {
+        background-color: #e0a8b3;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -21,16 +41,4 @@ bandaid_images = os.listdir(bandaid_folder)
 
 # Pick a random bandaid
 chosen_bandaid = random.choice(bandaid_images)
-bandaid_path = os.path.join(bandaid_folder, chosen_bandaid)
-
-# Display the bandaid
-st.image(bandaid_path, use_container_width=True)
-
-# Ask reflection question
-st.write("**In what way does this resonate with you today?**")
-
-user_input = st.text_area("Share your thoughts...")
-
-# When the user submits
-if user_input:
-    st.success("Thank you for your vulnerability. You are doing beautiful work 🌟🫶🏽")
+bandaid_path = os.path.join(bandaid_folder, chosen_b_
