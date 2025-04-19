@@ -235,7 +235,9 @@ if mode == "✍️ Healing Journal":
 
 # --- ABOUT THE CREATOR --- #
 elif mode == "🦋 About the Creator":
-    st.image("fraffee-photo.png", width=200)
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.image("fraffee-photo.png", width=200)
     st.markdown("""
     <div style='margin-top: 30px; font-size: 22px; line-height: 1.6;'>
         <p><strong>Fran</strong> (Artist name: <strong>Fraffee</strong>) is someone who codes in the way she writes poetry, and she writes poetry like the way she paints — with gentleness, intention, and love.</p>
