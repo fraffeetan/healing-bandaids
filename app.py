@@ -11,16 +11,16 @@ REFLECTION_FILE = "reflection_history.json"
 LOGO_IMAGE = "bandaids-logo.png"
 
 # --- STYLING --- #
-st.markdown(f"""
+st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap');
 
-    html, body, .stApp {{
+    html, body, .stApp {
         background-color: #4e6d60;
         font-family: 'Abril Fatface', cursive;
         color: white;
         text-align: center;
-    }}
+    }
 
     section[data-testid="stSidebar"] > div:first-child {
         background-color: #fce0cf;
@@ -29,7 +29,7 @@ st.markdown(f"""
         align-items: center;
         justify-content: center;
         color: #245444;
-    }}
+    }
 
     section[data-testid="stSidebar"] label,
     section[data-testid="stSidebar"] .css-1aumxhk,
@@ -37,49 +37,50 @@ st.markdown(f"""
         color: #245444 !important;
     }
 
-    .css-1v3fvcr {{  /* reflection streak background */
+    .css-1v3fvcr {
         background-color: #cbada7 !important;
-    }}
+    }
 
-    .fade-in {{
+    .fade-in {
         animation: fadeIn ease 2s;
-    }}
-    @keyframes fadeIn {{
-        0% {{opacity:0;}}
-        100% {{opacity:1;}}
-    }}
+    }
+    @keyframes fadeIn {
+        0% {opacity:0;}
+        100% {opacity:1;}
+    }
 
-    img {{
+    img {
         display: block;
         margin-left: auto;
         margin-right: auto;
         max-width: 80%;
         border-radius: 10px;
-    }}
+    }
 
-    .stTextInput, .stTextArea, .stButton {{
+    .stTextInput, .stTextArea, .stButton {
         display: block;
         margin-left: auto;
         margin-right: auto;
         width: 80%;
-    }}
+    }
 
-    .sparkle {{
+    .sparkle {
         display: flex;
         justify-content: center;
         font-size: 2rem;
         animation: breathe 8s ease-in-out infinite;
         animation-delay: 1s;
-    }}
+    }
 
-    @keyframes breathe {{
-        0%   {{ transform: scale(1); }}
-        25%  {{ transform: scale(4); }}
-        50%  {{ transform: scale(4); }}
-        75%  {{ transform: scale(1); }}
-        100% {{ transform: scale(1); }}
-    }}
-        .fade-slide {
+    @keyframes breathe {
+        0%   { transform: scale(1); }
+        25%  { transform: scale(4); }
+        50%  { transform: scale(4); }
+        75%  { transform: scale(1); }
+        100% { transform: scale(1); }
+    }
+
+    .fade-slide {
         animation: fadeSlide 0.8s ease-in-out;
     }
 
@@ -87,13 +88,14 @@ st.markdown(f"""
         0% { opacity: 0; transform: translateY(20px); }
         100% { opacity: 1; transform: translateY(0); }
     }
+
     [data-testid="stDataFrame"] {
         background-color: #cbada7 !important;
         color: #245444 !important;
         font-family: 'Abril Fatface', cursive !important;
         border-radius: 10px;
     }
-</style>
+    </style>
 """, unsafe_allow_html=True)
 
 # --- SIDEBAR LOGO --- #
