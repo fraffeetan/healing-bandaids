@@ -2,64 +2,93 @@ import streamlit as st
 import random
 import os
 
-# Set the background color
-st.markdown("""
+# --- CONFIG --- #
+BANDAID_FOLDER = "bandaids"
+BACKGROUND_IMAGE_URL = "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/paper.png"  # CHANGE THIS!
+
+# --- STYLING --- #
+st.markdown(f"""
     <style>
-    .stImage {
+    body {{
+        background-image: url('{BACKGROUND_IMAGE_URL}');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
+    .fade-in {{
+        animation: fadeIn ease 2s;
+        -webkit-animation: fadeIn ease 2s;
+        -moz-animation: fadeIn ease 2s;
+        -o-animation: fadeIn ease 2s;
+        -ms-animation: fadeIn ease 2s;
+    }}
+    @keyframes fadeIn {{
+        0% {{opacity:0;}}
+        100% {{opacity:1;}}
+    }}
+    img {{
         display: block;
         margin-left: auto;
         margin-right: auto;
-    }
-    .stTextInput, .stTextArea {
+        max-width: 80%;
+        border-radius: 10px;
+    }}
+    .stTextInput, .stTextArea, .stButton {{
         display: block;
         margin-left: auto;
         margin-right: auto;
         width: 80%;
-    }
-    .stButton {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
+    }}
     </style>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
-# Set the title
+# --- APP START --- #
 st.title("Healing Bandaids 🩹✨")
-st.subheader("Daily Reflection")
+st.sidebar.title("Navigation")
+mode = st.sidebar.radio("Choose mode ✨", ["Healing Journal", "View All Bandaids"])
 
-# Load all bandaid images
-bandaid_folder = "bandaids"
-bandaid_images = os.listdir(bandaid_folder)
+# --- LOAD IMAGES --- #
+bandaid_images = [img for img in os.listdir(BANDAID_FOLDER) if img.endswith(".png")]
 
-# Pick a random bandaid
-chosen_bandaid = random.choice(bandaid_images)
-bandaid_path = os.path.join(bandaid_folder, chosen_bandaid)
-
-# Display the bandaid
-st.image(bandaid_path, use_container_width=True)
-
-# Ask reflection question
-st.write("**In what way does this resonate with you today?**")
-
-# Initialize session state for user input and button visibility
+# --- SESSION STATE --- #
 if "user_input" not in st.session_state:
     st.session_state.user_input = ""
 if "show_next" not in st.session_state:
     st.session_state.show_next = False
+if "chosen_bandaid" not in st.session_state:
+    st.session_state.chosen_bandaid = random.choice(bandaid_images)
 
-# Display text area for user input
-user_input = st.text_area("Share your thoughts...", value=st.session_state.user_input)
+# --- VIEW MODE: GALLERY --- #
+if mode == "View All Bandaids":
+    st.header("All Healing Bandaids 🖼️")
+    for img in bandaid_images:
+        img_path = os.path.join(BANDAID_FOLDER, img)
+        st.image(img_path, caption=img, use_column_width=True)
+    st.info("When you're ready to reflect, go back to 'Healing Journal' on the sidebar ✍️")
 
-# When the user submits
-if user_input:
-    st.session_state.user_input = user_input
-    st.session_state.show_next = True
-    st.success("Thank you for your vulnerability. You are doing beautiful work 🌟🫶🏽")
+# --- VIEW MODE: JOURNALING --- #
+else:
+    st.subheader("Daily Reflection")
 
-# Show "Next" button if applicable
-if st.session_state.show_next:
-    if st.button("See next Healing Bandaid?"):
-        st.session_state.show_next = False
-        st.session_state.user_input = ""
-        st.experimental_rerun()
+    bandaid_path = os.path.join(BANDAID_FOLDER, st.session_state.chosen_bandaid)
+    st.markdown(f'<div class="fade-in"><img src="{bandaid_path}" alt="bandaid" /></div>', unsafe_allow_html=True)
+
+    st.write("**In what way does this resonate with you today?**")
+
+    # If not yet reflected, show input box
+    if not st.session_state.show_next:
+        user_input = st.text_area("Share your thoughts...", value=st.session_state.user_input)
+
+        if user_input and user_input.strip() != "":
+            st.session_state.user_input = user_input
+            st.session_state.show_next = True
+            st.success("Thank you for your vulnerability. You are doing beautiful work 🌟🫶🏽")
+
+    # If reflection is done, show button
+    if st.session_state.show_next:
+        if st.button("See next Healing Bandaid?"):
+            st.session_state.chosen_bandaid = random.choice(bandaid_images)
+            st.session_state.user_input = ""
+            st.session_state.show_next = False
+            st.experimental_rerun()
+
