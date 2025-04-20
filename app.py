@@ -240,7 +240,7 @@ elif mode == "🦋 About the Creator":
         st.image("fraffee-photo.png", width=200)
     st.markdown("""
     <div style='margin-top: 30px; font-size: 22px; line-height: 1.6;'>
-        <p><strong>Fran</strong> (Artist name: <strong>Fraffee</strong>) is someone who codes in the way she writes poetry, and she writes poetry like the way she paints — with gentleness, intention, and love.</p>
+        <p><strong>Fran</strong> (Artist name: <strong>Fraffee</strong>) is someone who vibe-codes in the way she writes poetry, and she writes poetry like the way she paints — with gentleness, intention, and love.</p>
         <p>A builder of soft digital spaces, Fran believes that reflection doesn’t have to be clinical or cold — it can be warm, whimsical, and wrapped in sparkles. ✨</p>
         <p>Whether it's choosing the perfect pastel for a slider, writing heart-hugging affirmations, or making butterflies pulse to the rhythm of a breath, her goal is simple: <br><strong>To create moments of stillness for those who need them.</strong></p>
     </div>
